@@ -1,0 +1,71 @@
+\documentclass[polish,a4paper,11pt]{mwart}
+
+\usepackage[polish, english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}  % zestaw fontów
+\usepackage{indentfirst}
+\frenchspacing
+
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{makecell}
+\usepackage{siunitx}
+\sisetup{output-decimal-marker = {,}}
+\usepackage{icomma}
+\let\lll\undefined
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{mathtools}
+\usepackage{import}		% wklejanie pdf_tex
+\usepackage{xcolor}		% kolory
+\usepackage{microtype}
+
+\usepackage[%			% bibliografia
+style=numeric,
+sorting=none,
+language=autobib,
+autolang=other,
+backend=biber,
+]{biblatex}
+
+\usepackage{csquotes}
+\DeclareQuoteAlias{croatian}{polish}
+
+\addbibresource{bibliografia.bib}
+
+\usepackage{placeins}	% poprawia float
+
+\let\Oldsection\section
+\renewcommand{\section}{\FloatBarrier\Oldsection}
+
+\let\Oldsubsection\subsection
+\renewcommand{\subsection}{\FloatBarrier\Oldsubsection}
+
+\let\Oldsubsubsection\subsubsection
+\renewcommand{\subsubsection}{\FloatBarrier\Oldsubsubsection}
+
+\AtBeginDocument{
+  \renewcommand{\tablename}{Tab.}
+  \renewcommand{\figurename}{Rys.}
+}
+
+\begin{document}
+
+	\begin{table}[h] %Tabelka
+	\centering
+		\begin{tabular}{ | c |  >{\centering\arraybackslash}m{5.5cm} | c | }
+			\hline
+			\makecell{ \textbf{Wydział:} \\ IMiR \\ \textbf{Rok:}~5 \\ Semestr: 2 } &
+			\textbf{\large{Niepewność i Monitoring w Wibroakustyce}} &
+			\makecell{Data \\ wykonania \\ ćwiczenia: \\ 9.11.2018 r} \\ \hline
+			\makecell{\emph{Wykonujący ćw.:} \\ osoba } &
+			\large{Nieklasyczne metody statystyczne} &
+			\makecell{Nr ćwiczenia: \\ 5} \\ \hline
+		\end{tabular}
+	\end{table}
+
+	\printbibliography[title=Bibliografia]
+	
+\end{document}
