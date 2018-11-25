@@ -3,6 +3,7 @@ import sympy as sp
 import pymc3 as pm
 from sympy.abc import i,x
 from matplotlib import pyplot as ppl
+import seaborn as sns
 
 K = lambda x: sp.exp(-(x**2)/2)/sp.sqrt(2*sp.pi)
 
@@ -26,7 +27,7 @@ p = sp.plot(f(x), ran, show=False)
 for xi in range(n):
     p.extend(sp.plot(K((x-Ldwn[xi])/h)/(n*h), ran, line_color='r', show=False))
 
-#p.show()
+ppl.show(block=False)
 
 
 from numpy import exp
@@ -47,5 +48,10 @@ with pm.Model() as model:
                                                        'theta': theta})
     trace = pm.sample(100000)
 
-pm.traceplot(trace)
-ppl.show()
+#pm.traceplot(trace)
+#ppl.show(block=False)
+pl = sns.distplot(trace.get_values('theta'))
+xx = pl.lines[0].get_xdata()
+pl.plot(xx, prior2008LDWN(xx))
+pl.legend(('posterior', 'posterior', 'prior'))
+ppl.show(block=False)
