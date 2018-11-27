@@ -22,18 +22,8 @@
 \usepackage{xcolor}		% kolory
 \usepackage{microtype}
 
-\usepackage[%			% bibliografia
-style=numeric,
-sorting=none,
-language=autobib,
-autolang=other,
-backend=biber,
-]{biblatex}
-
 \usepackage{csquotes}
 \DeclareQuoteAlias{croatian}{polish}
-
-\addbibresource{bibliografia.bib}
 
 \usepackage{placeins}	% poprawia float
 
@@ -66,6 +56,22 @@ backend=biber,
 		\end{tabular}
 	\end{table}
 
-	\printbibliography[title=Bibliografia]
-	
+  \section{Cel ćwiczenia}
+    Celem ćwiczenia było wyznaczenie niepewności standardowej metodą A
+    długookresowych wskaźników hałasu dla losowej próby 10-elementowej z 2009
+    roku, wykorzystując wnioskowanie bayesowskie.
+
+  \section{Przebieg ćwiczenia}
+    Do rozwiązania problemu użyto języka programowania Python. Napisano
+    program, który losował 10-elementową próbę z danych pomiarowych ($L_{DWN}$
+    oraz $L_N$ ze stacji monitoringu z roku 2009), a następnie na jej podstawie
+    wyznaczał rozkład próbkowy wykorzystując jądrowy estymator funkcji gęstości
+    prawdopodobieństwa. 
+
+
+  \section{Wyniki}
+
+  \section{Wnioski}
+
+
 \end{document}
