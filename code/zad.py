@@ -5,7 +5,7 @@ from sympy.abc import i,x
 import pymc3 as pm
 import seaborn as sns
 import matplotlib as mpl
-mpl.use("pgf")
+#mpl.use("pgf")
 import matplotlib.pyplot as ppl
 import platform, locale
 
@@ -20,49 +20,61 @@ exec(open("prior2008LN.py").read())
 
 n = 10
 
-Ldwnn = np.random.choice(r29[:,0],n)
-Lnn = np.random.choice(r29[:,1],n)
+Ldwnn = np.random.choice(r29[:, 0], n)
+Lnn = np.random.choice(r29[:, 1], n)
 
 Ldwn = sp.Array(Ldwnn)
 Ln = sp.Array(Lnn)
 
 
-def K(x):
-    return sp.exp(-(x**2)/2)/sp.sqrt(2*sp.pi)
-
-
-def f(x, xo, K, h=None):
+def f(x, xo, K=None, h=None):
     n = len(xo)
     if h is None:
-        h = 1.06*xo.std()*n**(-1/5)
+        h = 1.06*np.array(xo, dtype=float).std()*n**(-1/5)
+    if K is None:
+        K = lambda x: sp.exp(-(x**2)/2)/sp.sqrt(2*sp.pi)
     return 1/(n*h)*sp.Sum(K((x - xo[i-1])/h), (i, 1, n)).doit()
 
-ran = (x, np.min(Ldwn)-1/h, np.max(Ldwn)+1/h)
 
-p = sp.plot(f(x), ran, show=False)
+def kernelPlot(xo, K=None, h=None):
+    if h is None:
+        h = 1.06*np.array(xo, dtype=float).std()*n**(-1/5)
 
-for xi in range(n):
-    p.extend(sp.plot(K((x-Ldwn[xi])/h), ran, line_color='r', show=False))
+    if K is None:
+        K = lambda x: sp.exp(-(x**2)/2)/sp.sqrt(2*sp.pi)
 
-ppl.savefig("../report/plots/Kernel_Ldwn.pgf")
+    ran = (x, np.min(xo)-1/h, np.max(xo)+1/h)
 
-f_lbd = sp.lambdify(x, f(x))
+    p = sp.plot(f(x, xo), ran, show=False)
 
-def logp_theta(value):
-    return np.log(prior2008LDWN(value)).sum()
+    for xi in range(len(xo)):
+        p.extend(sp.plot(K((x-xo[xi])/h)/(h*len(xo)), ran, line_color='r', show=False))
 
-def logp_est(value):
-    return np.log(f_lbd(value, h)).sum()
-
+    return p
 
 
-with pm.Model() as model:
-    theta = pm.DensityDist('theta', logp_theta, testval=np.mean(Ldwnn))
-    like = pm.DensityDist('y_est', logp_est, observed={'value': Ldwnn})
-    trace = pm.sample(100000, nuts_kwargs={'target_accept': 0.9}, tune=1000)
+def bayesEst(xo, prior):
 
-pl = sns.distplot(trace.get_values('theta'))
-xx = pl.lines[0].get_xdata()
-pl.plot(xx, prior2008LDWN(xx))
-pl.legend(('posterior', 'posterior', 'prior'))
-ppl.show(block=False)
+    f_lbd = sp.lambdify(x, f(x, xo))
+
+    def logp_theta(value):
+        return np.log(prior(value)).sum()
+
+    def logp_est(value):
+        return np.log(f_lbd(value)).sum()
+
+    with pm.Model() as model:
+        theta = pm.DensityDist('theta', logp_theta, testval=np.mean(xo))
+        kern = pm.DensityDist('kern', logp_est, observed={'value': np.array(xo, dtype=float)})
+        trace = pm.sample(25000, nuts_kwargs={'target_accept': 0.9})
+
+    return trace
+
+
+
+
+#pl = sns.distplot(trace.get_values('theta'))
+#xx = pl.lines[0].get_xdata()
+#pl.plot(xx, prior2008LDWN(xx))
+#pl.legend(('posterior', 'posterior', 'prior'))
+#ppl.show(block=False)
