@@ -1,0 +1,13 @@
+text.usetex: True
+text.latex.preamble: \usepackage[T1]{fontenc}, \usepackage{icomma}, \usepackage{siunitx}
+pgf.texsystem: pdflatex
+pgf.preamble: \usepackage[utf8]{inputenc}, \usepackage[T1]{fontenc}, \usepackage{siunitx}
+pgf.rcfonts: False
+figure.figsize: 5, 3.5
+axes.grid: True
+savefig.dpi: 1200
+font.family: serif
+font.size: 10.0
+axes.unicode_minus: False
+figure.autolayout: True
+axes.formatter.use_locale: True
