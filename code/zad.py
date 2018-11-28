@@ -5,7 +5,7 @@ from sympy.abc import i,x
 import pymc3 as pm
 import seaborn as sns
 import matplotlib as mpl
-#mpl.use("pgf")
+mpl.use("pgf")
 import matplotlib.pyplot as ppl
 import platform, locale
 
@@ -37,20 +37,23 @@ def f(x, xo, K=None, h=None):
 
 
 def kernelPlot(xo, K=None, h=None):
+
     if h is None:
         h = 1.06*np.array(xo, dtype=float).std()*n**(-1/5)
 
     if K is None:
         K = lambda x: sp.exp(-(x**2)/2)/sp.sqrt(2*sp.pi)
 
-    ran = (x, np.min(xo)-1/h, np.max(xo)+1/h)
+    f_lbd = sp.lambdify(x, f(x, xo))
+    K_lbd = sp.lambdify(x, K(x))
 
-    p = sp.plot(f(x, xo), ran, show=False)
+    ran = np.arange(np.min(xo)-1/h, np.max(xo)+1/h, 0.01, dtype=float)
+
+    ppl.figure()
+    ppl.plot(ran, f_lbd(ran))
 
     for xi in range(len(xo)):
-        p.extend(sp.plot(K((x-xo[xi])/h)/(h*len(xo)), ran, line_color='r', show=False))
-
-    return p
+        ppl.plot(ran, K_lbd((ran-float(xo[xi]))/h)/(h*len(xo)), '--')
 
 
 def bayesEst(xo, prior):
@@ -71,7 +74,34 @@ def bayesEst(xo, prior):
     return trace
 
 
+Ldwn_tr = bayesEst(Ldwn, prior2008LDWN)
+Ln_tr = bayesEst(Ln, prior2008LN)
 
+#1. Tabela
+
+#2. Wykresy
+
+ppl.figure()
+ppl.hist(Ldwn_tr.get_values('theta'), bins=30)
+ppl.xlabel(r"Poziom ciśnienia [\si{\decibel}]")
+ppl.ylabel(r"Liczność")
+ppl.savefig("../report/plots/hist_Ldwn.pgf")
+
+ppl.figure()
+ppl.hist(Ln_tr.get_values('theta'), bins=30)
+ppl.xlabel(r"Poziom ciśnienia [\si{\decibel}]")
+ppl.ylabel(r"Liczność")
+ppl.savefig("../report/plots/hist_Ln.pgf")
+
+kernelPlot(Ldwn)
+ppl.xlabel(r"Poziom ciśnienia [\si{\decibel}]")
+ppl.ylabel(r"Prawdopodobieństwo")
+ppl.savefig("../report/plots/kernel_Ldwn.pgf")
+
+kernelPlot(Ln)
+ppl.xlabel(r"Poziom ciśnienia [\si{\decibel}]")
+ppl.ylabel(r"Prawdopodobieństwo")
+ppl.savefig("../report/plots/kernel_Ln.pgf")
 
 #pl = sns.distplot(trace.get_values('theta'))
 #xx = pl.lines[0].get_xdata()
