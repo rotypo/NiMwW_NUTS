@@ -21,6 +21,7 @@
 \usepackage{import}		% wklejanie pdf_tex
 \usepackage{xcolor}		% kolory
 \usepackage{microtype}
+\usepackage{pgfplots}
 
 \usepackage{csquotes}
 \DeclareQuoteAlias{croatian}{polish}
@@ -67,11 +68,58 @@
     oraz $L_N$ ze stacji monitoringu z roku 2009), a następnie na jej podstawie
     wyznaczał rozkład próbkowy wykorzystując jądrowy estymator funkcji gęstości
     prawdopodobieństwa. 
-
+    Drugą częścią ćwiczenia było wyznaczenie rozkładów \textit{a posteriori}
+    długookresowych wskaźników hałasu wykorzystując rozkłady \textit{a priori}
+    z załączonych plików. Użyto biblioteki \textit{pyMC3}, która umożliwia
+    generowanie rozkładów \textit{a posteriori} z wykorzystaniem narzędzia
+    No-U-Turn-Sampler (NUTS). Wyznaczono wartości oczekiwane oraz odchylenia
+    standardowei porównano je z wartościami uzyskanymi metodami klasycznymi.
 
   \section{Wyniki}
 
-  \section{Wnioski}
+  \begin{table}[!tbh]
+    \centering
+    \caption{Tabela przedstawiająca wyniki poszczególnych analiz}
+    \begin{tabular}{|c|c|c|c|}
+      \hline
+      Wskaźnik & \makecell{Wartość \\ zmierzona} & \makecell{Estymator \\ klasyczny} & \makecell{Estymator \\ Bayesowski} \\
+      \hline
+      $L_{DWN}$ & & & \\
+      \hline
+      $L_N$ & & & \\
+      \hline
+    \end{tabular}
+    \label{tab:wyniki}
+  \end{table}
+    
+    \begin{figure}
+      \centering
+      \input{plots/kernel_Ldwn.pgf}
+      \caption{Rozkład próbkowy wraz z jądrami składowymi dla parametru $L_{DWN}$}
+      \label{plot:kernel_ldwn}
+    \end{figure}
+    
+    \begin{figure}
+      \centering
+      \input{plots/kernel_Ln.pgf}
+      \caption{Rozkład próbkowy wraz z jądrami składowymi dla parametru $L_{N}$}
+      \label{plot:kernel_ln}
+    \end{figure}
+    
+    \begin{figure}
+      \centering
+      \input{plots/hist_Ldwn.pgf}
+      \caption{Histogram rozkładu \textit{a posteriori} dla wskaźnika $L_{DWN}$}
+      \label{plot:hist_ldwn}
+    \end{figure}
+
+    \begin{figure}
+      \centering
+      \input{plots/hist_Ldwn.pgf}
+      \caption{Histogram rozkładu \textit{a posteriori} dla wskaźnika $L_{N}$}
+      \label{plot:hist_ldwn}
+    \end{figure}
+
 
 
 \end{document}
