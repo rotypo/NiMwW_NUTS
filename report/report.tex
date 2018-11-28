@@ -21,6 +21,7 @@
 \usepackage{import}		% wklejanie pdf_tex
 \usepackage{xcolor}		% kolory
 \usepackage{microtype}
+\setlength{\emergencystretch}{3em}
 \usepackage{pgfplots}
 
 \usepackage{csquotes}
@@ -44,82 +45,77 @@
 
 \begin{document}
 
-	\begin{table}[h] %Tabelka
-	\centering
-		\begin{tabular}{ | c |  >{\centering\arraybackslash}m{5.5cm} | c | }
-			\hline
-			\makecell{ \textbf{Wydział:} \\ IMiR \\ \textbf{Rok:}~5 \\ Semestr: 2 } &
-			\textbf{\large{Niepewność i Monitoring w Wibroakustyce}} &
-			\makecell{Data \\ wykonania \\ ćwiczenia: \\ 9.11.2018 r} \\ \hline
-			\makecell{\emph{Wykonujący ćw.:} \\ osoba } &
-			\large{Nieklasyczne metody statystyczne} &
-			\makecell{Nr ćwiczenia: \\ 5} \\ \hline
-		\end{tabular}
-	\end{table}
+\begin{table}[h] %Tabelka
+  \centering
+  \begin{tabular}{ | c |  >{\centering\arraybackslash}m{5.5cm} | c | }
+    \hline
+    \makecell{ \textbf{Wydział:} \\ IMiR \\ \textbf{Rok:}~5 \\ Semestr: 2 } &
+    \textbf{\large{Niepewność i Monitoring w Wibroakustyce}} &
+    \makecell{Data \\ wykonania \\ ćwiczenia: \\ 9.11.2018 r} \\ \hline
+    \makecell{\emph{Wykonujący ćw.:} \\ osoba } &
+    \large{Nieklasyczne metody statystyczne} &
+    \makecell{Nr ćwiczenia: \\ 5} \\ \hline
+  \end{tabular}
+\end{table}
 
-  \section{Cel ćwiczenia}
-    Celem ćwiczenia było wyznaczenie niepewności standardowej metodą A
-    długookresowych wskaźników hałasu dla losowej próby 10-elementowej z 2009
-    roku, wykorzystując wnioskowanie bayesowskie.
+\section{Cel ćwiczenia}
+Celem ćwiczenia było wyznaczenie niepewności standardowej metodą A
+długookresowych wskaźników hałasu dla losowej próby 10-elementowej z 2009
+roku, wykorzystując wnioskowanie bayesowskie.
 
-  \section{Przebieg ćwiczenia}
-    Do rozwiązania problemu użyto języka programowania Python. Napisano
-    program, który losował 10-elementową próbę z danych pomiarowych ($L_{DWN}$
-    oraz $L_N$ ze stacji monitoringu z roku 2009), a następnie na jej podstawie
-    wyznaczał rozkład próbkowy wykorzystując jądrowy estymator funkcji gęstości
-    prawdopodobieństwa. 
-    Drugą częścią ćwiczenia było wyznaczenie rozkładów \textit{a posteriori}
-    długookresowych wskaźników hałasu wykorzystując rozkłady \textit{a priori}
-    z załączonych plików. Użyto biblioteki \textit{pyMC3}, która umożliwia
-    generowanie rozkładów \textit{a posteriori} z wykorzystaniem narzędzia
-    No-U-Turn-Sampler (NUTS). Wyznaczono wartości oczekiwane oraz odchylenia
-    standardowei porównano je z wartościami uzyskanymi metodami klasycznymi.
+\section{Przebieg ćwiczenia}
+Do rozwiązania problemu użyto języka programowania Python. Napisano
+program, który losował 10-elementową próbę z danych pomiarowych ($L_{DWN}$
+oraz $L_N$ ze stacji monitoringu z roku 2009), a następnie na jej podstawie
+wyznaczał rozkład próbkowy wykorzystując jądrowy estymator funkcji gęstości
+prawdopodobieństwa. 
+Drugą częścią ćwiczenia było wyznaczenie rozkładów \textit{a posteriori}
+długookresowych wskaźników hałasu wykorzystując rozkłady \textit{a priori}
+z załączonych plików. Użyto biblioteki \textit{pyMC3}, która umożliwia
+generowanie rozkładów \textit{a posteriori} z wykorzystaniem narzędzia
+No-U-Turn-Sampler (NUTS). Wyznaczono wartości oczekiwane oraz odchylenia
+standardowei porównano je z wartościami uzyskanymi metodami klasycznymi.
 
-  \section{Wyniki}
+\section{Wyniki}
 
-  \begin{table}[!tbh]
-    \centering
-    \caption{Tabela przedstawiająca wyniki poszczególnych analiz}
-    \begin{tabular}{|c|c|c|c|}
-      \hline
-      Wskaźnik & \makecell{Wartość \\ zmierzona} & \makecell{Estymator \\ klasyczny} & \makecell{Estymator \\ Bayesowski} \\
-      \hline
-      $L_{DWN}$ & & & \\
-      \hline
-      $L_N$ & & & \\
-      \hline
-    \end{tabular}
-    \label{tab:wyniki}
-  \end{table}
-    
-    \begin{figure}
-      \centering
-      \input{plots/kernel_Ldwn.pgf}
-      \caption{Rozkład próbkowy wraz z jądrami składowymi dla parametru $L_{DWN}$}
-      \label{plot:kernel_ldwn}
-    \end{figure}
-    
-    \begin{figure}
-      \centering
-      \input{plots/kernel_Ln.pgf}
-      \caption{Rozkład próbkowy wraz z jądrami składowymi dla parametru $L_{N}$}
-      \label{plot:kernel_ln}
-    \end{figure}
-    
-    \begin{figure}
-      \centering
-      \input{plots/hist_Ldwn.pgf}
-      \caption{Histogram rozkładu \textit{a posteriori} dla wskaźnika $L_{DWN}$}
-      \label{plot:hist_ldwn}
-    \end{figure}
+\begin{table}[!tbh]
+  \centering
+  \caption{Tabela przedstawiająca wyniki poszczególnych analiz}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    Wskaźnik & \makecell{Wartość \\ zmierzona} & \makecell{Estymator \\
+    klasyczny} & \makecell{Estymator \\ Bayesowski} \\\hline
+    \input{table.tex}
+  \end{tabular}
+  \label{tab:wyniki}
+\end{table}
 
-    \begin{figure}
-      \centering
-      \input{plots/hist_Ldwn.pgf}
-      \caption{Histogram rozkładu \textit{a posteriori} dla wskaźnika $L_{N}$}
-      \label{plot:hist_ldwn}
-    \end{figure}
+\begin{figure}[!tbh]
+  \centering
+  \input{plots/kernel_Ldwn.pgf}
+  \caption{Rozkład próbkowy wraz z jądrami składowymi dla parametru $L_{DWN}$}
+  \label{plot:kernel_ldwn}
+\end{figure}
 
+\begin{figure}[!tbh]
+  \centering
+  \input{plots/kernel_Ln.pgf}
+  \caption{Rozkład próbkowy wraz z jądrami składowymi dla parametru $L_{N}$}
+  \label{plot:kernel_ln}
+\end{figure}
 
+\begin{figure}[!tbh]
+  \centering
+  \input{plots/hist_Ldwn.pgf}
+  \caption{Histogram rozkładu \textit{a posteriori} dla wskaźnika $L_{DWN}$}
+  \label{plot:hist_ldwn}
+\end{figure}
+
+\begin{figure}[!tbh]
+  \centering
+  \input{plots/hist_Ldwn.pgf}
+  \caption{Histogram rozkładu \textit{a posteriori} dla wskaźnika $L_{N}$}
+  \label{plot:hist_ldwn}
+\end{figure}
 
 \end{document}

@@ -53,7 +53,7 @@ def kernelPlot(xo, K=None, h=None):
     ppl.plot(ran, f_lbd(ran))
 
     for xi in range(len(xo)):
-        ppl.plot(ran, K_lbd((ran-float(xo[xi]))/h)/(h*len(xo)), '--')
+        ppl.plot(ran, K_lbd((ran-float(xo[xi]))/h)/(h*len(xo)), 'r--')
 
 
 def bayesEst(xo, prior):
@@ -82,7 +82,7 @@ def classEst(data, k = 1.96):
 
     L_m = 10*np.log10(E_m)
 
-    n = np.sum(data)
+    n = len(data)
 
     uE = np.std(Ei)/np.sqrt(n)
 
@@ -96,7 +96,21 @@ def classEst(data, k = 1.96):
 
 Ldwn_tr = bayesEst(Ldwn, prior2008LDWN)
 Ln_tr = bayesEst(Ln, prior2008LN)
+
+Ldwn_cl = classEst(r29[:, 0])
+Ln_cl = classEst(r29[:, 1])
 #1. Tabela
+
+tab = open("../report/table.tex", "w+")
+tab.write(f"""
+$L_{{DWN}}$ & \\num{{{np.mean(r29[:, 0]):.2f}}} &
+\\num{{{Ldwn_cl[1]:.2f}}}$\\pm$\\num{{{np.max([Ldwn_cl[0], Ldwn_cl[2]]):.2f}}} &
+\\num{{{np.mean(Ldwn_tr.get_values('theta')):.2f}}}$\\pm$\\num{{{np.std(Ldwn_tr.get_values('theta')):.2f}}}\\\\\\hline
+$L_{{N}}$ & \\num{{{np.mean(r29[:, 1]):.2f}}} &
+\\num{{{Ln_cl[1]:.2f}}}$\\pm$\\num{{{np.max([Ln_cl[0], Ln_cl[2]]):.2f}}} &
+\\num{{{np.mean(Ln_tr.get_values('theta')):.2f}}}$\\pm$\\num{{{np.std(Ln_tr.get_values('theta')):.2f}}}\\\\\\hline
+""")
+tab.close()
 
 #2. Wykresy
 
@@ -121,9 +135,3 @@ kernelPlot(Ln)
 ppl.xlabel(r"Poziom ciśnienia [\si{\decibel}]")
 ppl.ylabel(r"Prawdopodobieństwo")
 ppl.savefig("../report/plots/kernel_Ln.pgf")
-
-#pl = sns.distplot(trace.get_values('theta'))
-#xx = pl.lines[0].get_xdata()
-#pl.plot(xx, prior2008LDWN(xx))
-#pl.legend(('posterior', 'posterior', 'prior'))
-#ppl.show(block=False)
