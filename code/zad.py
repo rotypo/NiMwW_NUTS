@@ -74,9 +74,28 @@ def bayesEst(xo, prior):
     return trace
 
 
+def classEst(data, k = 1.96):
+
+    Ei = np.power(10,0.1*data)
+
+    E_m = np.mean(Ei)
+
+    L_m = 10*np.log10(E_m)
+
+    n = np.sum(data)
+
+    uE = np.std(Ei)/np.sqrt(n)
+
+    Lu = 10*np.log10(E_m + k*uE)
+    Ll = 10*np.log10(E_m - k*uE)
+
+    U95u = Lu - L_m
+    U95l = L_m - Ll
+    return U95l, L_m,  U95u
+
+
 Ldwn_tr = bayesEst(Ldwn, prior2008LDWN)
 Ln_tr = bayesEst(Ln, prior2008LN)
-
 #1. Tabela
 
 #2. Wykresy
