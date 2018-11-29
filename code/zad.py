@@ -63,12 +63,14 @@ def bayesEst(xo, prior):
     def logp_theta(value):
         return np.log(prior(value)).sum()
 
-    def logp_est(value):
+    def logp_est(value, theta):
         return np.log(f_lbd(value)).sum()
 
     with pm.Model() as model:
         theta = pm.DensityDist('theta', logp_theta, testval=np.mean(xo))
-        kern = pm.DensityDist('kern', logp_est, observed={'value': np.array(xo, dtype=float)})
+        kern = pm.DensityDist('kern', logp_est,
+                              observed={'value': np.array(xo, dtype=float),
+                                        'theta': theta})
         trace = pm.sample(25000, nuts_kwargs={'target_accept': 0.9})
 
     return trace
