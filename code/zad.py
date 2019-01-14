@@ -1,13 +1,14 @@
 import numpy as np
 from numpy import exp
 import sympy as sp
-from sympy.abc import i,x
+from sympy.abc import i, x
 import pymc3 as pm
-import seaborn as sns
 import matplotlib as mpl
+import platform
+import locale
+import scipy.integrate as integrate
 mpl.use("pgf")
 import matplotlib.pyplot as ppl
-import platform, locale
 
 if platform.system() == 'Windows':
         locale.setlocale(locale.LC_NUMERIC, 'Polish')
@@ -58,27 +59,24 @@ def kernelPlot(xo, K=None, h=None):
 
 def bayesEst(xo, prior):
 
-    f_lbd = sp.lambdify(x, f(x, xo))
+    E, _ = integrate.quad(lambda x: x*prior(x), 40, 120)
 
-    def logp_theta(value):
-        return np.log(prior(value)).sum()
-
-    def logp_est(value, theta):
-        return np.log(f_lbd(value)).sum()
+    def logp_theta(value, mu):
+        return np.log(prior(value-E+mu)).sum()
 
     with pm.Model() as model:
-        theta = pm.DensityDist('theta', logp_theta, testval=np.mean(xo))
-        kern = pm.DensityDist('kern', logp_est,
-                              observed={'value': np.array(xo, dtype=float),
-                                        'theta': theta})
+        theta = pm.Normal('theta', mu=E, sd=1)
+        model = pm.DensityDist('model', logp_theta,
+                               observed={'value': np.array(xo, dtype=float),
+                                         'mu': theta}, testval=E)
         trace = pm.sample(25000, nuts_kwargs={'target_accept': 0.9})
 
     return trace
 
 
-def classEst(data, k = 1.96):
+def classEst(data, k=1.96):
 
-    Ei = np.power(10,0.1*data)
+    Ei = np.power(10, 0.1*data)
 
     E_m = np.mean(Ei)
 
@@ -101,7 +99,7 @@ Ln_tr = bayesEst(Ln, prior2008LN)
 
 Ldwn_cl = classEst(r29[:, 0])
 Ln_cl = classEst(r29[:, 1])
-#1. Tabela
+# 1. Tabela
 
 tab = open("../report/table.tex", "w+")
 tab.write(f"""
@@ -114,7 +112,7 @@ $L_{{N}}$ & \\num{{{np.mean(r29[:, 1]):.2f}}} &
 """)
 tab.close()
 
-#2. Wykresy
+# 2. Wykresy
 
 ppl.figure()
 ppl.hist(Ldwn_tr.get_values('theta'), bins=30)
